@@ -1,7 +1,7 @@
 import * as React from "react";
-import {useState} from "react";
 import {
     AppBar,
+    Button,
     Grid,
     IconButton,
     makeStyles,
@@ -22,12 +22,10 @@ import {$user, useCurrentUser} from "./factories/UserFactory";
 import {AlertDialog, ConfirmDialog, NotifySnackbar, ProgressIndicator} from "react-material-crud";
 import {CrudProvider} from "@crud/react";
 import {Menu as MenuIcon} from "react-feather";
-import {SideNav} from "./SideNav";
 
 const useStyles = makeStyles(({
     root: {
-        color: "#fff",
-        backgroundColor: theme.palette.primary.main
+        color: "#fff"
     },
     appContainer: {
         backgroundColor: "#eee",
@@ -84,7 +82,24 @@ export function AppComponent() {
         setAnchorEl(null);
     };
 
-    const [open, setOpen] = useState(true);
+    const Links = [
+        // {
+        //     label: "Dashboard",
+        //     sref: "dashboard"
+        // },
+        {
+            label: "Files",
+            sref: "files"
+        },
+        // {
+        //     label: "Shared Files",
+        //     sref: "sharedFiles"
+        // },
+        {
+            label: "Shared With Me",
+            sref: "sharedWithMeFiles"
+        }
+    ];
 
     return <MuiPickersUtilsProvider utils={DateFnsUtils}>
         {
@@ -93,47 +108,61 @@ export function AppComponent() {
                 <UIRouter router={router}>
                     <ThemeProvider theme={theme}>
                         <Grid container wrap="nowrap">
-                            {
-                                user && open &&
-                                <SideNav open={open}/>
-                            }
                             <Grid item xs container direction="column">
                                 {
                                     user &&
                                     <AppBar elevation={1} className={classNames(classes.root)} position="static">
                                         <Toolbar className="pl-0">
-                                            <Grid item className="pl-3">
+                                            <Grid item xs className="pl-3">
                                                 <Typography variant="h6">PDF Signed App</Typography>
                                             </Grid>
-                                            <Grid item xs>
-                                                {/*<IconButton*/}
-                                                {/*    onClick={() => setOpen(!open)}*/}
-                                                {/*    color="inherit">*/}
-                                                {/*    <MenuIcon/>*/}
-                                                {/*</IconButton>*/}
-                                            </Grid>
-                                            <Grid item md={2} xs={2} sm={2} justifyContent="flex-end" container>
-                                                <IconButton
-                                                    onClick={event => setAnchorEl(event.currentTarget)}
-                                                    color="inherit">
-                                                    <MenuIcon/>
-                                                </IconButton>
-                                                <Menu
-                                                    anchorEl={anchorEl}
-                                                    // keepMounted
-                                                    open={Boolean(anchorEl)}
-                                                    onClose={handleClose}
-                                                >
-                                                    <UISref to="profile">
-                                                        <MenuItem onClick={handleClose}>Account Information</MenuItem>
-                                                    </UISref>
-                                                    <UISref to="changePassword">
-                                                        <MenuItem onClick={handleClose}>Change Password</MenuItem>
-                                                    </UISref>
-                                                    <UISref to="help">
-                                                        <MenuItem onClick={handleClose}>Help</MenuItem>
-                                                    </UISref>
-                                                    <UISref to="login">
+                                            <Grid>
+                                                <Grid container className="desktop-menu p-1 p-1-all">
+                                                    {
+                                                        Links.map((link, index) => <Grid key={index}>
+                                                            <UISref to={link.sref}>
+                                                                <Button size="small" color="inherit"
+                                                                        className="link-button">
+                                                                    {link.label}
+                                                                </Button>
+                                                            </UISref>
+                                                        </Grid>)
+                                                    }
+                                                    <Grid>
+                                                        <Button
+                                                            size="small"
+                                                            color="inherit"
+                                                            className="link-button"
+                                                            onClick={
+                                                                async () => {
+                                                                    await $user.logout();
+                                                                    $state.go("login");
+                                                                }
+                                                            }
+                                                        >
+                                                            Logout
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid className="mobile-menu">
+                                                    <IconButton
+                                                        onClick={event => setAnchorEl(event.currentTarget)}
+                                                        color="inherit">
+                                                        <MenuIcon/>
+                                                    </IconButton>
+                                                    <Menu
+                                                        anchorEl={anchorEl}
+                                                        open={Boolean(anchorEl)}
+                                                        onClose={handleClose}
+                                                    >
+                                                        {
+                                                            Links.map((link, index) => <UISref to={link.sref}>
+                                                                    <MenuItem onClick={handleClose}>
+                                                                        {link.label}
+                                                                    </MenuItem>
+                                                                </UISref>
+                                                            )
+                                                        }
                                                         <MenuItem
                                                             onClick={
                                                                 async () => {
@@ -144,8 +173,8 @@ export function AppComponent() {
                                                         >
                                                             Logout
                                                         </MenuItem>
-                                                    </UISref>
-                                                </Menu>
+                                                    </Menu>
+                                                </Grid>
                                             </Grid>
                                         </Toolbar>
                                     </AppBar>

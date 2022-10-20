@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export function SideNav({open}) {
+export function SideNav() {
     const classes = useStyles();
 
     const Links = [
@@ -26,10 +26,10 @@ export function SideNav({open}) {
             label: "Files",
             sref: "files"
         },
-        {
-            label: "Shared Files",
-            sref: "sharedFiles"
-        },
+        // {
+        //     label: "Shared Files",
+        //     sref: "sharedFiles"
+        // },
         {
             label: "Shared With Me",
             sref: "sharedWithMeFiles"
@@ -75,7 +75,7 @@ export function SideNav({open}) {
 
     return <>
         <Drawer
-            open={open}
+            open={true}
             variant="persistent"
             anchor="left"
             className={classNames(classes.drawerWidth)}

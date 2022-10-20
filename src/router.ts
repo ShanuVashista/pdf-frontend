@@ -10,6 +10,11 @@ const states: ReactStateDeclaration[] = [
         lazyLoad: () => import("./pages/LoginPage")
     },
     {
+        url: "/register",
+        name: "signupUser.**",
+        lazyLoad: () => import("./pages/SignUpPage")
+    },
+    {
         url: "/dashboard",
         name: "dashboard.**",
         lazyLoad: () => import("./pages/Dashboard")

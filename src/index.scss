@@ -6,6 +6,12 @@
   src: url("~assets/fonts/Muli-Medium.ttf");
 }
 
+@font-face {
+  font-family: Muli;
+  font-weight: bold;
+  src: url("~assets/fonts/Muli-Bold.ttf");
+}
+
 a {
   cursor: pointer;
 }
@@ -70,4 +76,41 @@ button:focus {
 
 label {
   margin-bottom: 0;
+}
+
+.loading {
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  to {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.desktop-menu {
+  @media screen and (max-width: 467px) {
+    display: none;
+  }
+}
+
+.mobile-menu {
+  @media screen and (min-width: 468px) {
+    display: none;
+  }
+}
+
+.link-button {
+  &:hover {
+    color: white !important;
+  }
 }

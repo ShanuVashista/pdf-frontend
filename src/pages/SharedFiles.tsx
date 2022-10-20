@@ -19,7 +19,7 @@ export function SharedFiles() {
     useEffect(() => {
         retrieveFiles();
     }, []);
- 
+
     return <Grid className="p-2 p-2-all">
         <Grid container alignItems="center" className="p-2-all">
             <Typography component={Grid} item xs variant="h5" className="font-weight-bold">
@@ -41,7 +41,7 @@ export function SharedFiles() {
                                 <Typography component={Grid} item xs variant="body2" className="p-1 font-weight-bold">
                                     {file.fileId.docname}
                                 </Typography>
-                                <UISref to="fileViewer" params={{fileId: file.id}}>
+                                <UISref to="fileViewer" params={{fileId: file.fileId.id}}>
                                     <IconButton>
                                         <Edit size={16}/>
                                     </IconButton>

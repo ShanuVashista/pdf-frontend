@@ -1,61 +1,88 @@
-import React, {useEffect, useRef} from "react";
-import {Grid} from "@material-ui/core";
+import React, {useEffect, useRef, useState} from "react";
+import {Button, Grid, Typography} from "@material-ui/core";
 import {ReactStateDeclaration} from "@uirouter/react";
 import {$state} from "../router";
 import WebViewer from "@pdftron/webviewer";
 import {$crud} from "../factories/CrudFactory";
+import {generateFormData} from "../helpers";
+import {FileType} from "../types";
+import {Loading} from "./Loading";
 
 export function FileViewer() {
     const ref = useRef<HTMLDivElement>(null);
     const {fileId} = $state.params;
+    const [file, setFile] = useState<FileType>(null);
+    const [instance, setInstance] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const retrieveFile = async () => {
-        const {data} = await $crud.get(`file/get-file/${fileId}`);
-        WebViewer({
-            path: "pdf",
-            initialDoc: data[0].file_url
-        }, ref.current as HTMLDivElement).then(instance => {
-            console.log(instance);
-            const {annotationManager} = instance.Core;
-            instance.UI.setHeaderItems(function (header) {
-                header.update([]);
-                const toolsOverlay = header.getHeader('toolbarGroup-Annotate').get('toolsOverlay');
-                header.getHeader('toolbarGroup-Annotate').delete('toolsOverlay');
-                header.getHeader('default').push({
-                    type: 'toolGroupButton',
-                    toolGroup: 'signatureTools',
-                    dataElement: 'signatureToolGroupButton',
-                    title: 'annotation.signature',
+        try {
+            setLoading(true);
+            const {data} = await $crud.get(`file/get-file/${fileId}`);
+            setFile(data);
+            WebViewer({
+                path: "pdf",
+                initialDoc: data[0].file_url
+            }, ref.current as HTMLDivElement).then(instance => {
+                setInstance(instance);
+                const {annotationManager} = instance.Core;
+                instance.UI.setHeaderItems(function (header) {
+                    header.update([]);
+                    const toolsOverlay = header.getHeader('toolbarGroup-Annotate').get('toolsOverlay');
+                    header.getHeader('default').push({
+                        type: 'toolGroupButton',
+                        toolGroup: 'signatureTools',
+                        dataElement: 'signatureToolGroupButton',
+                        title: 'annotation.signature',
+                    });
+                    header.push(toolsOverlay);
                 });
-                header.push(toolsOverlay);
-                header.push({
-                    type: 'actionButton',
-                    img: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>',
-                    onClick: (data) => {
-                        console.log(data, "demo save")
-                    }
-                });
+                instance.UI.disableElements(['ribbons']);
+                instance.UI.disableElements(['toolsHeader']);
             });
-            instance.UI.disableElements(['ribbons']);
-            instance.UI.disableElements(['toolsHeader']);
-
-            annotationManager.addEventListener('annotationChanged', async (annotations, action, {imported}) => {
-                if (imported) return;
-                const selected = annotationManager.getSelectedAnnotations();
-                const xfdf = await annotationManager.exportAnnotations({widgets: false, links: false});
-                console.log(xfdf);
-            });
-        });
+        } finally {
+            setLoading(false);
+        }
     };
+
+    const update = async () => {
+        try {
+            setLoading(true);
+            const {docViewer, annotManager} = instance;
+            const doc = docViewer.getDocument();
+            const xfdfString = await annotManager.exportAnnotations({widgets: true, fields: true});
+            const data = await doc.getFileData({xfdfString});
+            const arr = new Uint8Array(data);
+            const blob = new Blob([arr], {type: 'application/pdf'});
+            await $crud.put("file/update-file", generateFormData({
+                filename: blob,
+                docname: file.docname,
+                fileId: fileId
+            }));
+        } finally {
+            setLoading(false);
+            $state.go("files");
+        }
+    }
 
     useEffect(() => {
         retrieveFile();
     }, []);
 
     return <Grid item xs container direction="column" wrap="nowrap">
-        <Grid item xs ref={ref}/>
+        {
+            !loading ? <>
+                <Grid container alignItems="center" className="p-2 bg-white">
+                    <Typography variant="h6" component={Grid} item xs className="p-2 font-weight-bold">
+                        {file?.docname}
+                    </Typography>
+                    <Button variant="contained" color="primary" onClick={update}>Update</Button>
+                </Grid>
+                <Grid item xs ref={ref}/>
+            </> : <Loading/>
+        }
     </Grid>;
-};
+}
 
 
 export const states: ReactStateDeclaration[] = [

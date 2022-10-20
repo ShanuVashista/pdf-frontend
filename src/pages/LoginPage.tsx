@@ -1,13 +1,13 @@
-import {ReactStateDeclaration} from "@uirouter/react";
+import {ReactStateDeclaration, UISref} from "@uirouter/react";
 import React, {useState} from "react";
-import {Button, Grid, makeStyles, Paper, TextField} from "@material-ui/core";
+import {Button, Grid, IconButton, TextField, Typography} from "@material-ui/core";
 import {$user} from "../factories/UserFactory";
+import {$state} from "../router";
+import {Eye, EyeOff} from "react-feather";
 
-
-const useStyles = makeStyles(theme => ({}));
 
 export function LoginPage() {
-    const classes = useStyles();
+    const [showPassword, setShowPassword] = useState(false);
     const [params, setParams] = useState({
         email: "",
         password: ""
@@ -24,11 +24,15 @@ export function LoginPage() {
 
     const login = async () => {
         await $user.login(params);
+        $state.reload();
     };
 
-    return <Grid item xs container alignItems="center" justifyContent="center" className="p-2 p-2-all">
-        <Grid item xs={12} md={6} lg={4}>
-            <Grid container direction="column" wrap="nowrap" component={Paper} className="p-2 p-2-all">
+    return <Grid item xs container alignItems="center" justifyContent="center" className="p-2 p-2-all bg-white">
+        <Grid item xs={12} sm={6} lg={4}>
+            <Grid container direction="column" wrap="nowrap" className="p-2 p-2-all">
+                <Typography component={Grid} variant="h4" className="mb-3 font-weight-bold">
+                    PDF Sign Login
+                </Typography>
                 <Grid>
                     <TextField
                         fullWidth
@@ -43,17 +47,26 @@ export function LoginPage() {
                     <TextField
                         fullWidth
                         size="small"
+                        type={showPassword ? "text" : "password"}
                         variant="outlined"
                         label="Password"
                         value={params.password}
                         onChange={e => setParam("password", e.target.value)}
+                        InputProps={{
+                            endAdornment: <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                {!showPassword ? <Eye size={18}/> : <EyeOff size={18}/>}
+                            </IconButton>
+                        }}
                     />
                 </Grid>
                 <Grid container alignItems="center">
                     <Grid item xs>
-                        <Button color="primary" size="small" variant="outlined">
-                            Create Account
-                        </Button>
+                        <Typography style={{fontSize: 12}} className="text-uppercase">
+                            You already have a account?
+                            <UISref to="signupUser">
+                                <span className="d-inline-block ml-1 pointer text-primary">Sign Up</span>
+                            </UISref>
+                        </Typography>
                     </Grid>
                     <Grid>
                         <Button color="primary" size="small" variant="contained" onClick={login}>
