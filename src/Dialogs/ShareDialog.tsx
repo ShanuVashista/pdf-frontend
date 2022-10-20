@@ -77,8 +77,8 @@ export function ShareDialog(props: ShareDialogInterface) {
             >
                 <MenuItem value={""}><small>None</small></MenuItem>
                 {
-                    users.filter(u => u.id !== currentUser.id).map(row => <MenuItem value={row.id} key={row.id}>
-                        {row.fullname}
+                    users.filter(u => u?.id !== currentUser?.id).map(row => <MenuItem value={row?.id} key={row?.id}>
+                        {row?.fullname}
                     </MenuItem>)
                 }
             </TextField>

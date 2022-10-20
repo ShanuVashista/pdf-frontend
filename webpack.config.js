@@ -97,7 +97,7 @@ module.exports = (env = {}) => {
                 patterns: [
                     {
                         from: path.resolve(__dirname, 'node_modules/@pdftron/webviewer/public'),
-                        to: path.resolve(__dirname, 'dist/pdf')
+                        to: path.resolve(__dirname, 'dist/pdf-tron')
                     }
                 ],
             }),

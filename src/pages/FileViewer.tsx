@@ -6,7 +6,6 @@ import WebViewer from "@pdftron/webviewer";
 import {$crud} from "../factories/CrudFactory";
 import {generateFormData} from "../helpers";
 import {FileType} from "../types";
-import {Loading} from "./Loading";
 
 export function FileViewer() {
     const ref = useRef<HTMLDivElement>(null);
@@ -21,11 +20,10 @@ export function FileViewer() {
             const {data} = await $crud.get(`file/get-file/${fileId}`);
             setFile(data);
             WebViewer({
-                path: "pdf",
+                path: "pdf-tron",
                 initialDoc: data[0].file_url
             }, ref.current as HTMLDivElement).then(instance => {
                 setInstance(instance);
-                const {annotationManager} = instance.Core;
                 instance.UI.setHeaderItems(function (header) {
                     header.update([]);
                     const toolsOverlay = header.getHeader('toolbarGroup-Annotate').get('toolsOverlay');
@@ -70,19 +68,15 @@ export function FileViewer() {
     }, []);
 
     return <Grid item xs container direction="column" wrap="nowrap">
-        {
-            !loading ? <>
-                <Grid container alignItems="center" className="p-2 bg-white">
-                    <Typography variant="h6" component={Grid} item xs className="p-2 font-weight-bold">
-                        {file?.docname}
-                    </Typography>
-                    <Button variant="contained" color="primary" onClick={update}>Update</Button>
-                </Grid>
-                <Grid item xs ref={ref}/>
-            </> : <Loading/>
-        }
+        <Grid container alignItems="center" className="p-2 bg-white">
+            <Typography variant="h6" component={Grid} item xs className="p-2 font-weight-bold">
+                {file?.docname}
+            </Typography>
+            <Button variant="contained" color="primary" onClick={update}>Update</Button>
+        </Grid>
+        <Grid item xs ref={ref}/>
     </Grid>;
-}
+};
 
 
 export const states: ReactStateDeclaration[] = [
