@@ -3,10 +3,13 @@ import React, {useState} from "react";
 import {Button, Grid, IconButton, TextField, Typography} from "@material-ui/core";
 import {Eye, EyeOff} from "react-feather";
 import {$crud} from "../factories/CrudFactory";
+import {$state} from "../router";
+import {Loading} from "./Loading";
 
 export function SignUpPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [params, setParams] = useState({
         firstname: "",
         lastname: "",
@@ -27,13 +30,16 @@ export function SignUpPage() {
 
     const register = async () => {
         try {
+            setLoading(true);
             await $crud.post("user/register", params);
         } finally {
-            // $state.go("login");
+            await setLoading(false);
+            $state.go("login");
         }
     };
 
     return <Grid item xs container alignItems="center" justifyContent="center" className="p-2 p-2-all bg-white">
+        {loading && <Loading/>}
         <Grid item xs={12} sm={6} lg={4}>
             <Grid container direction="column" wrap="nowrap" className="p-2 p-2-all">
                 <Typography component={Grid} variant="h4" className="mb-3 font-weight-bold">
@@ -123,7 +129,7 @@ export function SignUpPage() {
                         </Typography>
                     </Grid>
                     <Grid>
-                        <Button color="primary" size="small" variant="contained" onClick={register}>
+                        <Button disabled={loading} color="primary" size="small" variant="contained" onClick={register}>
                             Register
                         </Button>
                     </Grid>

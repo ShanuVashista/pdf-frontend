@@ -58,7 +58,7 @@ export function SharedWithMeFiles() {
                                                 Shared With {file.receiverId.fullname}
                                             </Typography>
                                         </Grid>
-                                        <UISref to="fileViewer" params={{fileId: file.id}}>
+                                        <UISref to="fileViewer" params={{fileId: file.fileId.id}}>
                                             <IconButton>
                                                 <Edit size={16}/>
                                             </IconButton>
