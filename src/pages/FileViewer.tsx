@@ -72,7 +72,7 @@ export function FileViewer() {
             <Typography variant="h6" component={Grid} item xs className="p-2 font-weight-bold">
                 {file?.docname}
             </Typography>
-            <Button variant="contained" color="primary" onClick={update}>Update</Button>
+            <Button disabled={loading} variant="contained" color="primary" onClick={update}>Update</Button>
         </Grid>
         <Grid item xs ref={ref}/>
     </Grid>;
