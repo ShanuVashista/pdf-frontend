@@ -55,7 +55,7 @@ export function SharedWithMeFiles() {
                                             </Typography>
                                             <Typography className="p-1 font-weight-bold text-primary"
                                                         style={{fontSize: 11}}>
-                                                Shared With {file.senderId.fullname}
+                                                Shared By {file.senderId.fullname}
                                             </Typography>
                                         </Grid>
                                         <UISref to="fileViewer" params={{fileId: file.fileId.id}}>
