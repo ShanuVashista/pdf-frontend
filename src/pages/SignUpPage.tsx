@@ -52,7 +52,13 @@ export function SignUpPage() {
 
   const setDisabledFunc = (val) => {
     if (val == true) {
-      setDisabled(false);
+      if (
+        params.firstname != null &&
+        params.phone != null &&
+        params.email != null
+      ) {
+        setDisabled(false);
+      }
     } else {
       setDisabled(true);
     }
@@ -185,7 +191,7 @@ export function SignUpPage() {
           <Grid>
             <PasswordChecklist
               rules={["minLength", "specialChar", "number", "capital", "match"]}
-              minLength={6}
+              minLength={8}
               value={params.password}
               valueAgain={params.confirmPassword}
               onChange={(isValid) => setDisabledFunc(isValid)}
@@ -231,3 +237,4 @@ export const states: ReactStateDeclaration[] = [
     component: SignUpPage,
   },
 ];
+
