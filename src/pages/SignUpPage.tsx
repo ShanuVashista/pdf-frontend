@@ -50,11 +50,11 @@ export function SignUpPage() {
     }
   };
 
-  const enableSubmitButton = (e) => {
-    setParam("confirmPassword", e.target.value);
-
-    if (params.password === params.confirmPassword) {
+  const setDisabledFunc = (val) => {
+    if (val == true) {
       setDisabled(false);
+    } else {
+      setDisabled(true);
     }
   };
 
@@ -166,7 +166,7 @@ export function SignUpPage() {
               variant="outlined"
               label="Confirm Password"
               value={params.confirmPassword}
-              onChange={(e) => enableSubmitButton(e)}
+              onChange={(e) => setParam("confirmPassword", e.target.value)}
               InputProps={{
                 endAdornment: (
                   <IconButton
@@ -188,6 +188,7 @@ export function SignUpPage() {
               minLength={6}
               value={params.password}
               valueAgain={params.confirmPassword}
+              onChange={(isValid) => setDisabledFunc(isValid)}
             />
           </Grid>
           <Grid container alignItems="center">
