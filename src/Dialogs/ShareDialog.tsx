@@ -31,7 +31,7 @@ export function ShareDialog(props: ShareDialogInterface) {
     };
 
     const retrieveUser = async () => {
-        const {data} = await $crud.post("user/list-users");
+        const {data} = await $crud.post("user/list-users", {limit: 100, page: 1});
         setUsers(data);
     };
 
