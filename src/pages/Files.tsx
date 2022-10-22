@@ -175,7 +175,7 @@ export function Files() {
                 <Loading/>
             )}
             <ShareDialog
-                fileId={file?.id}
+                fileId={file?._id}
                 open={show}
                 onClose={() => setShow(false)}
             />
