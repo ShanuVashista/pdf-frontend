@@ -6,11 +6,15 @@ import WebViewer from "@pdftron/webviewer";
 import {$crud} from "../factories/CrudFactory";
 import {generateFormData} from "../helpers";
 import {FileType} from "../types";
+import {useCurrentUser} from "../factories/UserFactory";
+import moment from "moment";
 
 export function FileViewer() {
     const ref = useRef<HTMLDivElement>(null);
     const {fileId} = $state.params;
+    const user = useCurrentUser();
     const [file, setFile] = useState<FileType>(null);
+    const [fileName, setFileName] = useState<string>("");
     const [instance, setInstance] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -25,6 +29,7 @@ export function FileViewer() {
                 }, ref.current as HTMLDivElement
             ).then((instance) => {
                 setInstance(instance);
+                const {Annotations, annotationManager, documentViewer} = instance.Core;
                 instance.UI.setHeaderItems(function (header) {
                     header.update([]);
                     const toolsOverlay = header
@@ -40,9 +45,21 @@ export function FileViewer() {
                 });
                 instance.UI.disableElements(["ribbons"]);
                 instance.UI.disableElements(["toolsHeader"]);
-                // @ts-ignore
-                const tool = instance.Core.getTool("AnnotationCreateRubberStamp");
-                tool.setStandardStamps(["Approved", "AsIs", data[0].file_url]);
+
+                documentViewer.addEventListener('annotationsLoaded', () => {
+                    const annot = new Annotations.StampAnnotation({
+                        X: 10,
+                        Y: documentViewer.getPageHeight(1) - 60,
+                        Opacity: 0.4,
+                        Width: 300,
+                        Height: 50,
+                    });
+
+                    annot.setStampText(`${user._id} / ${moment().format("MMM DD, YYYY HH:mm:ss")}`);
+
+                    annotationManager.addAnnotation(annot);
+                    annotationManager.redrawAnnotation(annot);
+                });
             });
         } finally {
             setLoading(false);
@@ -79,6 +96,10 @@ export function FileViewer() {
         retrieveFile();
     }, []);
 
+    useEffect(() => {
+        setFileName(file?.docname)
+    }, [file]);
+
     return (
         <Grid item xs container direction="column" wrap="nowrap">
             <Grid container alignItems="center" className="p-2 bg-white">
@@ -89,7 +110,7 @@ export function FileViewer() {
                     xs
                     className="p-2 font-weight-bold"
                 >
-                    {file?.docname}
+                    {fileName}
                 </Typography>
                 <Button
                     disabled={loading}
@@ -98,6 +119,15 @@ export function FileViewer() {
                     onClick={update}
                 >
                     Update
+                </Button>
+                <Button
+                    disabled={loading}
+                    variant="contained"
+                    color="secondary"
+                    className="ml-2"
+                    onClick={async () => await instance.downloadPdf()}
+                >
+                    Download
                 </Button>
             </Grid>
             <Grid item xs ref={ref}/>

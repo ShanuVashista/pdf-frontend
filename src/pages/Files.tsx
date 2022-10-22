@@ -90,11 +90,10 @@ export function Files() {
                     PDF Files
                 </Typography>
 
-                <Grid className="p-0">
+                <Grid>
                     <TextField
                         fullWidth
                         label="Search"
-                        name="searchValue"
                         value={searchValue}
                         onChange={searchData}
                         variant="outlined"
@@ -102,20 +101,10 @@ export function Files() {
                         color="primary"
                     />
                 </Grid>
-                <Grid className="p-0">
-                    <Grid container alignItems="center" className="p-2-all">
-                        <Grid>
-                            <input
-                                accept="application/pdf"
-                                className="d-none"
-                                id="contained-button-file"
-                                type="file"
-                            />
-                            <Button size="small" variant="outlined" onClick={uploadFile}>
-                                <Upload size={16} className="mr-2"/> Upload
-                            </Button>
-                        </Grid>
-                    </Grid>
+                <Grid>
+                    <Button variant="outlined" onClick={uploadFile}>
+                        <Upload size={16} className="mr-2"/> Upload
+                    </Button>
                 </Grid>
             </Grid>
             {!loading ? (
