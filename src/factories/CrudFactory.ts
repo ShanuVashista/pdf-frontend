@@ -98,7 +98,7 @@ export class CrudFactory extends CrudRequest {
 
         try {
             const response = await fetch(fullUrl, options);
-            
+
             if (response.status === 200) {
                 res = await response.json();
                 const {
@@ -117,7 +117,7 @@ export class CrudFactory extends CrudRequest {
                     res = await response.json();
                 } finally {
                     throw {
-                        message: response.statusText ? `${response.status} : ${response.statusText}` : res.message || messages[response.status],
+                        message: res.message,
                         status: response.status
                     }
                 }
