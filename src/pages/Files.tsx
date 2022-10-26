@@ -41,8 +41,6 @@ export function Files() {
     }
   };
 
-  console.log("files", files);
-
   const deleteFile = async (id) => {
     await $crud.confirm({
       textContent: "This file won't be revert.",
