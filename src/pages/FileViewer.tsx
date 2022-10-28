@@ -28,6 +28,8 @@ export function FileViewer() {
       setLoading(true);
       const { data } = await $crud.get(`file/get-file/${fileId}`);
 
+      console.log("data", data);
+
       setFile(data);
       setFileOwnerId(data[0].owner._id);
 

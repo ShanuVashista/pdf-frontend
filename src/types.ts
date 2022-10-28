@@ -1,4 +1,5 @@
 export interface SharedWithMeFileType extends Base {
+    [x: string]: string | number | boolean | {} | ReactElement<any, string | JSXElementConstructor<any>> | ReactNodeArray | ReactPortal
     IsSigned: string,
     access: string,
     is_editable: boolean,

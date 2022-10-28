@@ -22,8 +22,6 @@ export function ReviewFileViewer() {
 
   const { fileId } = $state.params;
 
-  console.log("file", file);
-
   const retrieveFile = async () => {
     try {
       setLoading(true);

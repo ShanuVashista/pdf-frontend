@@ -13,27 +13,23 @@ import { $crud } from "../factories/CrudFactory";
 import { EmptyContainer } from "./EmptyContainer";
 import { Loading } from "./Loading";
 
-export function SharedWithMeFiles() {
+export function ReviewFiles() {
   const [files, setFiles] = useState<SharedWithMeFileType[]>([]);
   const [loading, setLoading] = useState(false);
 
   const retrieveFiles = async () => {
     try {
       setLoading(true);
-      const { data } = await $crud.post("files/receive-files-list", {
+      const { data } = await $crud.post("files/review-files-list", {
         paginate: true,
         limit: "10",
         page: "1",
       });
+
       setFiles(data);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDocId = (id) => {
-    localStorage.removeItem("fileDocId");
-    localStorage.setItem("fileDocId", id);
   };
 
   useEffect(() => {
@@ -50,7 +46,7 @@ export function SharedWithMeFiles() {
           variant="h5"
           className="font-weight-bold"
         >
-          Shared PDF Files With Me For Signature
+          Reviewed PDF Files
         </Typography>
       </Grid>
       {!loading ? (
@@ -86,16 +82,26 @@ export function SharedWithMeFiles() {
                           className="p-1 font-weight-bold text-primary"
                           style={{ fontSize: 11 }}
                         >
-                          Shared By {file.senderId.fullname}
+                          Signed By {file.receiverId.fullname}
                         </Typography>
+                        {file.reviewFailReason ? (
+                          <Typography
+                            className="p-1 font-weight-bold"
+                            style={{ fontSize: 11, color: "red" }}
+                          >
+                            Reason for fail - {file.reviewFailReason}
+                          </Typography>
+                        ) : (
+                          ""
+                        )}
                       </Grid>
                       <UISref
-                        to="fileViewer"
+                        to="reviewFileViewer"
                         params={{
-                          fileId: file.fileId._id,
+                          fileId: file._id,
                         }}
                       >
-                        <IconButton onClick={() => handleDocId(file._id)}>
+                        <IconButton>
                           <Edit size={16} />
                         </IconButton>
                       </UISref>
@@ -107,7 +113,7 @@ export function SharedWithMeFiles() {
           </Grid>
         ) : (
           <Grid className="p-md-5">
-            <EmptyContainer content="You don't have any shared file for signature" />
+            <EmptyContainer content="You don't have any reviewed file." />
           </Grid>
         )
       ) : (
@@ -119,12 +125,12 @@ export function SharedWithMeFiles() {
 
 export const states: ReactStateDeclaration[] = [
   {
-    url: "/shared-with-me-files",
-    name: "sharedWithMeFiles",
+    url: "/reviewed-files",
+    name: "reviewFiles",
     data: {
-      title: "Shared With Me Files",
+      title: "Signed Document",
       loggedIn: true,
     },
-    component: SharedWithMeFiles,
+    component: ReviewFiles,
   },
 ];

@@ -82,7 +82,7 @@ export function SignedDocument() {
                           className="p-1 font-weight-bold text-primary"
                           style={{ fontSize: 11 }}
                         >
-                          Shared By {file.senderId.fullname}
+                          Signed By {file.receiverId.fullname}
                         </Typography>
                       </Grid>
                       <UISref

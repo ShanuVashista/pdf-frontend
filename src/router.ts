@@ -53,6 +53,11 @@ const states: ReactStateDeclaration[] = [
     name: "reviewFileViewer.**",
     lazyLoad: () => import("./pages/ReviewFileViewer"),
   },
+  {
+    url: "/reviewed-files",
+    name: "reviewFiles.**",
+    lazyLoad: () => import("./pages/ReviewFiles"),
+  },
 ];
 
 states.forEach((state) => router.stateRegistry.register(state));
