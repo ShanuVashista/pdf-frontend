@@ -237,4 +237,3 @@ export const states: ReactStateDeclaration[] = [
     component: SignUpPage,
   },
 ];
-
