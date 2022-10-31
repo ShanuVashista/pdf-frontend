@@ -6,6 +6,7 @@ import {
   IconButton,
   Paper,
   Typography,
+  Tooltip,
 } from "@material-ui/core";
 import { Edit, File } from "react-feather";
 import { SharedWithMeFileType } from "../types";
@@ -96,7 +97,9 @@ export function SharedWithMeFiles() {
                         }}
                       >
                         <IconButton onClick={() => handleDocId(file._id)}>
-                          <Edit size={16} />
+                          <Tooltip title="View PDF file">
+                            <Edit size={16} />
+                          </Tooltip>
                         </IconButton>
                       </UISref>
                     </Grid>

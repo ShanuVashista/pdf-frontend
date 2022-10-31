@@ -6,6 +6,7 @@ import {
   IconButton,
   Paper,
   Typography,
+  Tooltip,
 } from "@material-ui/core";
 import { Edit, File } from "react-feather";
 import { SharedWithMeFileType } from "../types";
@@ -92,7 +93,9 @@ export function SignedDocument() {
                         }}
                       >
                         <IconButton>
-                          <Edit size={16} />
+                          <Tooltip title="Review PDF file">
+                            <Edit size={16} />
+                          </Tooltip>
                         </IconButton>
                       </UISref>
                     </Grid>

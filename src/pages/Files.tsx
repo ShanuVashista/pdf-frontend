@@ -176,11 +176,15 @@ export function Files() {
                       </Typography>
                       <UISref to="fileViewer" params={{ fileId: file._id }}>
                         <IconButton>
-                          <Edit size={16} />
+                          <Tooltip title="Edit PDF file">
+                            <Edit size={16} />
+                          </Tooltip>
                         </IconButton>
                       </UISref>
                       <IconButton onClick={() => deleteFile(file._id)}>
-                        <Trash className="text-danger" size={16} />
+                        <Tooltip title="Delete PDF file">
+                          <Trash className="text-danger" size={16} />
+                        </Tooltip>
                       </IconButton>
                     </Grid>
                   </Grid>
