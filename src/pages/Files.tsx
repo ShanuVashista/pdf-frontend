@@ -10,10 +10,11 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import { Edit, File, Share2, Trash, Upload } from "react-feather";
+import { Edit, File, Share2, Trash, Upload, Settings } from "react-feather";
 import { FileType } from "../types";
 import { $crud } from "../factories/CrudFactory";
 import { ShareDialog } from "../Dialogs/ShareDialog";
+import { FileRenameDialog } from "../Dialogs/FileRenameDialog";
 import { generateFormData } from "../helpers";
 import { EmptyContainer } from "./EmptyContainer";
 import { Loading } from "./Loading";
@@ -24,6 +25,7 @@ export function Files() {
   const [files, setFiles] = useState<FileType[]>([]);
   const [file, setFile] = useState<FileType>(null);
   const [show, setShow] = useState(false);
+  const [renameShow, setRenameShow] = useState(false);
   const [loading, setLoading] = useState(false);
   let [searchValue, setSearchValue] = useState<string>("");
 
@@ -129,7 +131,7 @@ export function Files() {
                     >
                       <File size={180} className="text-success" />
                       <IconButton
-                        style={{ top: 12, right: 12 }}
+                        style={{ top: 12, right: 40 }}
                         className="position-absolute"
                         onClick={() => {
                           setShow(true);
@@ -138,6 +140,18 @@ export function Files() {
                       >
                         <Tooltip title="Share File For Signature">
                           <Share2 size={20} />
+                        </Tooltip>
+                      </IconButton>
+                      <IconButton
+                        style={{ top: 12, right: 0 }}
+                        className="position-absolute"
+                        onClick={() => {
+                          setRenameShow(true);
+                          setFile(file);
+                        }}
+                      >
+                        <Tooltip title="Rename Files">
+                          <Settings size={20} />
                         </Tooltip>
                       </IconButton>
                     </Grid>
@@ -186,6 +200,12 @@ export function Files() {
         fileId={file?._id}
         open={show}
         onClose={() => setShow(false)}
+      />
+      <FileRenameDialog
+        fileId={file?._id}
+        open={renameShow}
+        retrieveFiles={retrieveFiles}
+        onClose={() => setRenameShow(false)}
       />
     </Grid>
   );
