@@ -269,21 +269,6 @@ const FileViewerTest = () => {
               margin: "auto",
             }}
           />
-
-          {/* <header className="App-header">
-            <Document file="/sample.pdf" onLoadSuccess={onDocumentLoadSuccess}>
-              <Page height="600" pageNumber={pageNumber} />
-            </Document>
-            <p>
-              Page {pageNumber} of {numPages}
-            </p>
-            {pageNumber > 1 && (
-              <button onClick={changePageBack}>Previous Page</button>
-            )}
-            {pageNumber < numPages && (
-              <button onClick={changePageNext}>Next Page</button>
-            )}
-          </header> */}
         </Grid>
         <Grid item xs={3}></Grid>
       </Grid>
