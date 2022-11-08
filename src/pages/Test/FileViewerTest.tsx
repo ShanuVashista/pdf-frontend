@@ -13,13 +13,9 @@ import { $crud } from "../../factories/CrudFactory";
 import { generateFormData } from "../../helpers";
 import { FileType } from "../../types";
 import { useCurrentUser } from "../../factories/UserFactory";
-import SignatureCanvas from "react-signature-canvas";
 import { Image, FileText, PenTool } from "react-feather";
 import { ggID } from "./utils/helper";
 import prepareAssets, { fetchFont } from "./utils/prepareAssets";
-import PdfViewerComponent from "./PdfViewerComponent";
-
-import { Document, Page } from "react-pdf/dist/esm/entry.webpack";
 
 const FileViewerTest = () => {
   const ref = useRef<HTMLDivElement>(null);

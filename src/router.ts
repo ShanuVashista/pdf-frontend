@@ -64,6 +64,11 @@ const states: ReactStateDeclaration[] = [
     lazyLoad: () => import("./pages/Test/Test"),
   },
   {
+    url: "/file-viewer-test2?:fileId",
+    name: "FileViewerTest2.**",
+    lazyLoad: () => import("./pages/Test/fileReader/App"),
+  },
+  {
     url: "/file-viewer-test?:fileId",
     name: "FileViewerTest.**",
     lazyLoad: () => import("./pages/Test/FileViewerTest"),

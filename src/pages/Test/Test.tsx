@@ -174,7 +174,7 @@ const Test = () => {
                           {file.docname}
                         </Typography>
                         <UISref
-                          to="FileViewerTest"
+                          to="FileViewerTest2"
                           params={{ fileId: file._id }}
                         >
                           <IconButton>
