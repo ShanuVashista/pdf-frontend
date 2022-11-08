@@ -1,15 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Grid, Typography } from "@material-ui/core";
-import { ReactStateDeclaration } from "@uirouter/react";
-import { $state } from "../router";
-import WebViewer from "@pdftron/webviewer";
-import { $crud } from "../factories/CrudFactory";
-import { generateFormData } from "../helpers";
-import { FileType } from "../types";
-import { useCurrentUser } from "../factories/UserFactory";
+import React, { useState, useEffect, useRef } from "react";
+import { ReactStateDeclaration, UISref } from "@uirouter/react";
+import { Button, Grid, Typography, TextField } from "@material-ui/core";
 import moment from "moment";
+import WebViewer from "@pdftron/webviewer";
+import { $state } from "../../router";
+import { $crud } from "../../factories/CrudFactory";
+import { generateFormData } from "../../helpers";
+import { FileType } from "../../types";
+import { useCurrentUser } from "../../factories/UserFactory";
 
-export function FileViewer() {
+const FileViewerTest = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { fileId } = $state.params;
   const user = useCurrentUser();
@@ -19,8 +19,53 @@ export function FileViewer() {
   const [fileOwnerId, setFileOwnerId] = useState<string>("");
   const [instance, setInstance] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [pdfFile, setPdfFile] = useState("");
+  const [urlVal, setUrlVal] = useState("");
 
   const DocFileData = localStorage.getItem("fileDocId");
+  const UserId = user._id;
+
+  const _base64ToArrayBuffer = (dataURI) => {
+    return Uint8Array.from(window.atob(dataURI), (v) => v.charCodeAt(0));
+  };
+
+  const fileToBase64 = (filename, filepath) => {
+    console.log("filename", filename);
+    console.log("filepath", filepath);
+
+    return new Promise((resolve) => {
+      var file = new File([filename], filepath);
+      var reader = new FileReader();
+      //   Read file content on file loaded event
+      reader.onloadend = function (event) {
+        resolve(event.target.result);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const base64toBlob = (data: string) => {
+    // Cut the prefix `data:application/pdf;base64` from the raw base 64
+    const base64WithoutPrefix = data.substr(
+      "data:application/pdf;base64,".length
+    );
+
+    const bytes = atob(base64WithoutPrefix);
+    console.log("bytes", bytes);
+
+    let length = bytes.length;
+    console.log("length", length);
+
+    let out = new Uint8Array(length);
+    console.log("out", out);
+
+    while (length--) {
+      out[length] = bytes.charCodeAt(length);
+    }
+
+    return new Blob([out], { type: "application/pdf" });
+  };
 
   const retrieveFile = async () => {
     try {
@@ -30,57 +75,23 @@ export function FileViewer() {
       setFile(data);
       setFileOwnerId(data[0].owner._id);
 
-      WebViewer(
-        {
-          path: "pdf-tron",
-          initialDoc: data[0].file_url,
-        },
-        ref.current as HTMLDivElement
-      ).then((instance) => {
-        // console.log();
+      let base64 = await fileToBase64(data[0].docname, data[0].file_url);
 
-        setInstance(instance);
-        const { Annotations, annotationManager, documentViewer } =
-          instance.Core;
-        instance.UI.setHeaderItems(function (header) {
-          header.update([]);
-          const toolsOverlay = header
-            .getHeader("toolbarGroup-Annotate")
-            .get("toolsOverlay");
-          header.getHeader("default").push({
-            type: "toolGroupButton",
-            toolGroup: "signatureTools",
-            dataElement: "signatureToolGroupButton",
-            title: "annotation.signature",
-          });
-          header.push(toolsOverlay);
-        });
-        instance.UI.disableElements(["ribbons"]);
-        instance.UI.disableElements(["toolsHeader"]);
+      console.log(base64);
 
-        documentViewer.addEventListener("annotationsLoaded", () => {
-          const annot = new Annotations.StampAnnotation({
-            X: 10,
-            Y: documentViewer.getPageHeight(1) - 60,
-            Opacity: 0.4,
-            Width: 300,
-            Height: 50,
-          });
+      let unit8 = await _base64ToArrayBuffer(base64);
 
-          annot.setStampText(
-            `${user._id} / ${moment().format("MMM DD, YYYY HH:mm:ss")}`
-          );
+      console.log("unit8", unit8);
 
-          annotationManager.addAnnotation(annot);
-          annotationManager.redrawAnnotation(annot);
-        });
-      });
+      const blob = await base64toBlob(base64);
+      const url = URL.createObjectURL(blob);
+      console.log("url", url);
+
+      setUrlVal(url);
     } finally {
       setLoading(false);
     }
   };
-
-  const UserId = user._id;
 
   const update = async () => {
     try {
@@ -120,6 +131,7 @@ export function FileViewer() {
       const data = await doc.getFileData({ xfdfString });
       const arr = new Uint8Array(data);
       const blob = new Blob([arr], { type: "application/pdf" });
+
       await $crud.put(
         "file/sign-file",
         generateFormData({
@@ -156,6 +168,7 @@ export function FileViewer() {
         >
           {fileName}
         </Typography>
+
         {UserId !== fileOwnerId ? (
           <Button
             disabled={loading}
@@ -175,15 +188,7 @@ export function FileViewer() {
             Update
           </Button>
         )}
-        {/* 
-        <Button
-          disabled={loading}
-          variant="contained"
-          color="primary"
-          onClick={update}
-        >
-          Update
-        </Button> */}
+
         <Button
           disabled={loading}
           variant="contained"
@@ -194,19 +199,25 @@ export function FileViewer() {
           Download
         </Button>
       </Grid>
-      <Grid item xs ref={ref} />
+      {/* <Grid item xs ref={ref} /> */}
+
+      <Grid container alignItems="center" className="p-2 bg-white">
+        {/* <canvas src={pdfFile} height="200px" /> */}
+        {/* <img src={pdfFile} height="200px" /> */}
+        {/* <Viewer fileUrl={urlVal} /> */}
+      </Grid>
     </Grid>
   );
-}
+};
 
 export const states: ReactStateDeclaration[] = [
   {
-    url: "/file-viewer?:fileId",
-    name: "fileViewer",
+    url: "/file-viewer-test?",
+    name: "FileViewerTest",
     data: {
-      title: "File Viewer",
+      title: "Files",
       loggedIn: true,
     },
-    component: FileViewer,
+    component: FileViewerTest,
   },
 ];

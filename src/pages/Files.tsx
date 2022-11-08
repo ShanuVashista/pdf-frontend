@@ -22,12 +22,12 @@ import { Loading } from "./Loading";
 export function Files() {
   let [limit] = useState(10);
   let [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<FileType[]>([]);
+  let [searchValue, setSearchValue] = useState<string>("");
   const [file, setFile] = useState<FileType>(null);
   const [show, setShow] = useState(false);
   const [renameShow, setRenameShow] = useState(false);
-  const [loading, setLoading] = useState(false);
-  let [searchValue, setSearchValue] = useState<string>("");
 
   const retrieveFiles = async () => {
     try {
