@@ -15,6 +15,7 @@ import { Page } from "./components/Page";
 import { Attachments } from "./components/Attachments";
 import { $state } from "../../../router";
 import { $crud } from "../../../factories/CrudFactory";
+import "index.css";
 
 const App: React.FC = () => {
   const [helpModalOpen, setHelpModalOpen] = useState(false);
