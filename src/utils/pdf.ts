@@ -120,7 +120,7 @@ export async function save(
     await Promise.all(pagesProcesses);
     try {
         updatedPdfBytes = await pdfDoc.save()
-        await $crud.put("file/sign-file",
+        await $crud.put("file/update-file",
             generateFormData({
                 filename: updatedPdfBytes,
                 docname: fileName,
