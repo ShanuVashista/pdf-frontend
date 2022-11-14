@@ -77,7 +77,7 @@ export const DrawingModal: any = ({open, dismiss, confirm, drawing}: Props) => {
         setMaxX(0);
         setMinY(Infinity);
         setMaxY(0);
-        setStrokeWidth(5);
+        setStrokeWidth(3);
         setStroke(Color.BLACK);
     };
 

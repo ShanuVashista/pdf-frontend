@@ -15,6 +15,7 @@ export async function save(
 ) {
     let b;
     const PDFLib = await getAsset('PDFLib');
+    const download = await getAsset('download');
     let pdfDoc: {
         getPages: () => any[];
         embedFont: (arg0: unknown) => any;
@@ -99,6 +100,14 @@ export async function save(
                 };
             }
         });
+        const s = `<svg width="100" height="100">
+   <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />`;
+        page.drawSvgPath(s, {
+            x: 100,
+            y: 100,
+            borderWidth: 2,
+            scale: 1
+        });
         // embed objects in order
         const drawProcesses: any[] = await Promise.all(embedProcesses);
         drawProcesses.forEach((p) => p());
@@ -106,6 +115,7 @@ export async function save(
     await Promise.all(pagesProcesses);
     try {
         updatedPdfBytes = await pdfDoc.save()
+        download(updatedPdfBytes, name, 'application/pdf');
         await $crud.put("file/update-file",
             generateFormData({
                 filename: updatedPdfBytes,

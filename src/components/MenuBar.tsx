@@ -1,5 +1,6 @@
 import React from 'react';
 import {Menu} from 'semantic-ui-react';
+import {$state} from "../router";
 
 interface Props {
     title?: string;
@@ -38,6 +39,7 @@ export const MenuBar: React.FC<Props> = (
                         disabled={!isPdfSaved}
                         onClick={downloadPdf}
                     />
+                    <Menu.Item name="Close" onClick={() => $state.go("files")}/>
                 </>
             )}
         </Menu.Menu>
