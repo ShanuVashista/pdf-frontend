@@ -42,11 +42,10 @@ interface PDF {
 }
 
 export const readAsPDF = async (file): Promise<PDF> => {
+    const PDFLib = await getAsset('PDFLib');
     const pdfjsLib = await getAsset('pdfjsLib');
-    let b;
-    // // Safari possibly get webkitblobresource error 1 when using origin file blob
-    await fetch(file).then((res) => res.blob()).then(r => b = r);
-    const blob = new Blob([b], {type: 'application/pdf'});
-    const url = window.URL.createObjectURL(blob);
-    return pdfjsLib.getDocument(url).promise;
+    pdfjsLib.getDocument(file).promise.then((pdf) => {
+        pdf.getAttachments(file).then((e => console.log(e)))
+    })
+    return pdfjsLib.getDocument(file).promise;
 };

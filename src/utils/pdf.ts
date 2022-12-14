@@ -28,6 +28,7 @@ export async function save(
     try {
         await fetch(pdfFile).then((res) => res.blob()).then(r => b = r);
         pdfDoc = await PDFLib.PDFDocument.load(await readAsArrayBuffer(b));
+        console.warn(pdfDoc);
     } catch (e) {
         console.log('Failed to load PDF.');
         throw e;
@@ -37,6 +38,7 @@ export async function save(
         const pageObjects = objects[pageIndex];
         // 'y' starts from bottom in PDFLib, use this to calculate y
         const pageHeight = page.getHeight();
+        console.warn(page.getHeight(), page.getWidth());
         const embedProcesses = pageObjects.map(async (object: Attachment) => {
             if (object.type === 'image') {
                 const {file, x, y, width, height} = object as ImageAttachment;
@@ -120,9 +122,10 @@ export async function save(
     await Promise.all(pagesProcesses);
     try {
         updatedPdfBytes = await pdfDoc.save()
+        const blob = new Blob([new Uint8Array(updatedPdfBytes.buffer, updatedPdfBytes.byteOffset, updatedPdfBytes.length)], {type: 'application/pdf'});
         await $crud.put("file/update-file",
             generateFormData({
-                filename: updatedPdfBytes,
+                filename: blob,
                 docname: fileName,
                 fileId: fileId,
             })

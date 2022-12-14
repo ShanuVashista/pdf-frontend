@@ -10,7 +10,7 @@ import {AttachmentTypes} from "./entities";
 import {ggID} from "./utils/helpers";
 import {useAttachments} from "./hooks/useAttachments";
 import {UploadTypes, useUploader} from "./hooks/useUploader";
-import {Page} from "./components/Page";
+import {PdfPage} from "./components/Page";
 import {Attachments} from "./components/Attachments";
 import {Grid, IconButton} from "@material-ui/core";
 import {ChevronLeft, ChevronRight} from "react-feather";
@@ -130,7 +130,7 @@ export function Dashboard() {
                         {currentPage && (
                             <Segment compact stacked={isMultiPage && !isLastPage}>
                                 <div style={{position: "relative"}}>
-                                    <Page
+                                    <PdfPage
                                         dimensions={dimensions}
                                         updateDimensions={setDimensions}
                                         page={currentPage}

@@ -1,8 +1,6 @@
-import React, {createRef, useState} from 'react';
-import {readAsDataURL, readAsImage, readAsPDF} from '../utils/asyncReader';
-import {ggID} from '../utils/helpers';
+import React from 'react';
+import {readAsPDF} from '../utils/asyncReader';
 import {Pdf} from './usePdf';
-import {AttachmentTypes} from '../entities';
 
 type ActionEvent<T> = React.TouchEvent<T> | React.MouseEvent<T>;
 
@@ -26,30 +24,7 @@ const handlers = {
             console.log('Failed to load pdf', error);
             throw new Error('Failed to load PDF');
         }
-    },
-    image: async (file: File) => {
-        try {
-            const url = await readAsDataURL(file);
-            const img = await readAsImage(url as string);
-            const id = ggID();
-            const {width, height} = img;
-
-            const imageAttachemnt: ImageAttachment = {
-                id,
-                type: AttachmentTypes.IMAGE,
-                width,
-                height,
-                x: 0,
-                y: 0,
-                img,
-                file,
-            };
-            return imageAttachemnt;
-        } catch (error) {
-            console.log('Failed to load image', error);
-            throw new Error('Failed to load image');
-        }
-    },
+    }
 };
 
 /**
@@ -60,30 +35,11 @@ const handlers = {
  * @
  * @param use UploadTypes
  */
-export const useUploader = ({
-                                use,
-                                afterUploadPdf
-                            }: {
+export const useUploader = ({use, afterUploadPdf}: {
     use: UploadTypes;
     afterUploadPdf?: (upload: Pdf) => void;
     afterUploadAttachment?: (upload: Attachment) => void;
 }) => {
-    const [isUploading, setIsUploading] = useState(false);
-    const inputRef = createRef<HTMLInputElement>();
-
-    const onClick = (event: ActionEvent<HTMLInputElement>) => {
-        event.currentTarget.value = '';
-    };
-
-    const handleClick = () => {
-        const input = inputRef.current;
-
-        if (input) {
-            setIsUploading(true);
-            input.click();
-        }
-    };
-
     const upload = async (file) => {
         const result = await handlers[use](file);
 
@@ -95,10 +51,6 @@ export const useUploader = ({
     };
 
     return {
-        upload,
-        onClick,
-        inputRef,
-        isUploading,
-        handleClick,
+        upload
     };
 };
