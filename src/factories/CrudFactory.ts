@@ -137,10 +137,10 @@ export class CrudFactory extends CrudRequest {
             }
         } catch (e) {
             console.error(e);
-            // this.notify({
-            //     message: e.message,
-            //     type: "error",
-            // });
+            this.notify({
+                message: e.message,
+                type: "error",
+            });
             throw e;
         }
 

@@ -111,10 +111,10 @@ export function AppComponent() {
         //   label: "Signed Files",
         //   sref: "SignedDocument",
         // },
-        // {
-        //     label: "Reviewed Files",
-        //     sref: "reviewFiles",
-        // },
+        {
+            label: "Reviewed Files",
+            sref: "reviewFiles",
+        },
     ];
 
     return (
