@@ -119,7 +119,7 @@ export async function save(
             height: 50,
         })
 
-        page.drawText(`${fileData.owner.id} / ${moment(fileData.updatedAt).format('llll')}`, {
+        page.drawText(`${fileData.owner.id} / ${moment().format('llll')}`, {
             x: 20,
             y: 20,
             size: 15,
