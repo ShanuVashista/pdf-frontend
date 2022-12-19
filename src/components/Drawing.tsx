@@ -2,6 +2,8 @@ import React, {RefObject} from 'react';
 import {Dimmer} from 'semantic-ui-react';
 import {Div} from '../ui/components/Div';
 import {ConfirmContent} from './ConfirmContent';
+import {IconButton} from "@material-ui/core";
+import {Trash} from "react-feather";
 
 interface Props {
     path?: string;
@@ -49,16 +51,30 @@ export const Drawing: React.FC<Props> = (
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseOut={handleMouseOut}
-                onDoubleClick={onClick}
                 style={{
                     position: 'absolute',
                     top: positionTop,
                     left: positionLeft,
-                    width,
-                    height,
+                    width: width,
+                    height: height,
+                    borderStyle: 'dashed',
+                    borderWidth: 1,
+                    borderColor: 'grey',
                     cursor: 'move',
                 }}
             >
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    background: 'whitesmoke',
+                    zIndex: 9,
+                    borderRadius: '50%'
+                }}>
+                    <IconButton onClick={onClick}>
+                        <Trash size={15}/>
+                    </IconButton>
+                </div>
                 <Dimmer.Dimmable as={Div} dimmed={dimmerActive}>
                     <svg ref={svgRef}>
                         <path
