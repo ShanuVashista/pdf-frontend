@@ -27,6 +27,9 @@ export const Drawing = ({
     const [mouseDown, setMouseDown] = useState(false);
     const [positionTop, setPositionTop] = useState(y);
     const [positionLeft, setPositionLeft] = useState(x);
+    const [canvasWidth, setCanvasWidth] = useState(width);
+    const [direction, setDirection] = useState<string[]>([]);
+    const [canvasHeight, setCanvasHeight] = useState(height);
     const [operation, setOperation] = useState<DragActions>(
         DragActions.NO_MOVEMENT
     );
@@ -40,8 +43,14 @@ export const Drawing = ({
     }, [svgRef, width, height]);
 
     const handleMousedown = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.preventDefault();
         setMouseDown(true);
         setOperation(DragActions.MOVE);
+        const directions = event.currentTarget.dataset.direction;
+        if (directions) {
+            setDirection(directions.split('-'));
+            setOperation(DragActions.SCALE);
+        }
     };
 
     const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -101,6 +110,30 @@ export const Drawing = ({
         }
     };
 
+    const handleImageScale = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.preventDefault();
+
+        if (mouseDown) {
+            if (direction.includes('left')) {
+                setPositionLeft(positionLeft + event.movementX);
+                setCanvasWidth(canvasWidth - event.movementX);
+            }
+
+            if (direction.includes('top')) {
+                setPositionTop(positionTop + event.movementY);
+                setCanvasHeight(canvasHeight - event.movementY);
+            }
+
+            if (direction.includes('right')) {
+                setCanvasWidth(canvasWidth + event.movementX);
+            }
+
+            if (direction.includes('bottom')) {
+                setCanvasHeight(canvasHeight + event.movementY);
+            }
+        }
+    };
+
     const handleClick = () => setDimmerActive(true);
     const cancelDelete = () => setDimmerActive(false);
 
@@ -113,9 +146,9 @@ export const Drawing = ({
             stroke={stroke}
             strokeWidth={strokeWidth}
             path={path}
-            width={width}
+            width={canvasWidth}
             svgRef={svgRef}
-            height={height}
+            height={canvasHeight}
             onClick={handleClick}
             cancelDelete={cancelDelete}
             dimmerActive={dimmerActive}
@@ -126,6 +159,7 @@ export const Drawing = ({
             handleMouseUp={handleMouseUp}
             positionLeft={positionLeft}
             positionTop={positionTop}
+            handleDrawingScale={handleImageScale}
         />
     );
 };

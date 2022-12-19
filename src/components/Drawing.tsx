@@ -3,7 +3,9 @@ import {Dimmer} from 'semantic-ui-react';
 import {Div} from '../ui/components/Div';
 import {ConfirmContent} from './ConfirmContent';
 import {IconButton} from "@material-ui/core";
-import {Trash} from "react-feather";
+import {Move, Trash} from "react-feather";
+
+const ADJUSTERS_DIMENSIONS = 20;
 
 interface Props {
     path?: string;
@@ -22,6 +24,7 @@ interface Props {
     handleMouseUp: DragEventListener<HTMLDivElement>;
     handleMouseMove: DragEventListener<HTMLDivElement>;
     handleMouseOut: DragEventListener<HTMLDivElement>;
+    handleDrawingScale: DragEventListener<HTMLDivElement>;
 }
 
 export const Drawing: React.FC<Props> = (
@@ -41,6 +44,7 @@ export const Drawing: React.FC<Props> = (
         handleMouseMove,
         handleMouseOut,
         handleMouseUp,
+        handleDrawingScale,
         onClick,
     }
 ) => {
@@ -63,6 +67,9 @@ export const Drawing: React.FC<Props> = (
                     cursor: 'move',
                 }}
             >
+                <div style={{position: 'absolute', top: -12, left: -8}}>
+                    <Move size={15}/>
+                </div>
                 <div style={{
                     position: 'absolute',
                     top: 0,
@@ -94,6 +101,20 @@ export const Drawing: React.FC<Props> = (
                         />
                     </Dimmer>
                 </Dimmer.Dimmable>
+                <div
+                    data-direction="top-left"
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onMouseMove={handleDrawingScale}
+                    style={{
+                        position: 'absolute',
+                        cursor: 'nwse-resize',
+                        top: -12,
+                        left: -8,
+                        width: ADJUSTERS_DIMENSIONS,
+                        height: ADJUSTERS_DIMENSIONS,
+                    }}
+                />
             </div>
         </div>
     );

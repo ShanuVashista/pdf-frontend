@@ -119,12 +119,12 @@ export class CrudFactory extends CrudRequest {
                     message = "We're facing some technical issue. Please try again after some time",
                 } = res;
                 const is_success = status === 200;
-                if (notify && (method !== "GET" || !is_success)) {
-                    this.notify({
-                        message,
-                        type: is_success ? "success" : "error",
-                    });
-                }
+                // if (notify && (method !== "GET" || !is_success)) {
+                //     this.notify({
+                //         message,
+                //         type: is_success ? "success" : "error",
+                //     });
+                // }
             } else {
                 try {
                     res = await response.json();
@@ -137,10 +137,10 @@ export class CrudFactory extends CrudRequest {
             }
         } catch (e) {
             console.error(e);
-            this.notify({
-                message: e.message,
-                type: "error",
-            });
+            // this.notify({
+            //     message: e.message,
+            //     type: "error",
+            // });
             throw e;
         }
 

@@ -1,15 +1,15 @@
 import * as React from "react";
 import {
-  AppBar,
-  Button,
-  Grid,
-  IconButton,
-  makeStyles,
-  Menu,
-  MenuItem,
-  ThemeProvider,
-  Toolbar,
-  Typography,
+    AppBar,
+    Button,
+    Grid,
+    IconButton,
+    makeStyles,
+    Menu,
+    MenuItem,
+    ThemeProvider,
+    Toolbar,
+    Typography,
 } from "@material-ui/core";
 import classNames from "classnames";
 import {theme} from "./theme";
@@ -111,10 +111,10 @@ export function AppComponent() {
         //   label: "Signed Files",
         //   sref: "SignedDocument",
         // },
-        {
-            label: "Reviewed Files",
-            sref: "reviewFiles",
-        },
+        // {
+        //     label: "Reviewed Files",
+        //     sref: "reviewFiles",
+        // },
     ];
 
     return (
