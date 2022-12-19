@@ -17,6 +17,7 @@ import {ChevronLeft, ChevronRight} from "react-feather";
 import {$crud} from "./factories/CrudFactory";
 import {FileType} from "./types";
 import {downloadPdf} from "./utils/pdf";
+import {Loading} from "./pages/Loading";
 
 export function FileViewer() {
     const {fileId} = $state.params;
@@ -117,7 +118,7 @@ export function FileViewer() {
                 isPdfLoaded={!!file}
             />
 
-            {!file ? null : (
+            {!file ? <Loading/> : (
                 <Grid container alignItems="center" className="p-2 p-2-all">
                     <Grid>
                         {isMultiPage && !isFirstPage && (
