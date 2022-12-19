@@ -128,3 +128,10 @@ label {
   height: auto !important;
   position: static !important;
 }
+
+.custom-menubar {
+  top: 0;
+  left: 0;
+  z-index: 999;
+  position: sticky;
+}

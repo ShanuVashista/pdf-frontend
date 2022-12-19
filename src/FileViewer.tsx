@@ -90,10 +90,11 @@ export function FileViewer() {
     const handleSavePdf = () => {
         setFileSaved(false);
         try {
-            savePdf(allPageAttachments, demoFile[0].docname, demoFile[0]._id);
+            savePdf(allPageAttachments, demoFile[0].docname, demoFile[0]._id, demoFile[0]);
         } finally {
             setFileSaved(true);
         }
+        // $state.reload()
     };
 
 

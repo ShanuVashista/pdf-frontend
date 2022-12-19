@@ -46,12 +46,12 @@ export const usePdf = () => {
         setIsLastPage(_pages.length === 1);
     };
 
-    const savePdf = async (attachments: Attachments[], fileName, fileId) => {
+    const savePdf = async (attachments: Attachments[], fileName, fileId, fileData) => {
         if (isSaving || !file) return;
 
         setIsSaving(true);
         try {
-            await save(file, attachments, name, fileName, fileId);
+            await save(file, attachments, name, fileName, fileId, fileData);
         } catch (e) {
             console.log(e);
         } finally {

@@ -23,7 +23,7 @@ export const MenuBar: React.FC<Props> = (
         isPdfSaved
     }
 ) => (
-    <Menu pointing>
+    <Menu pointing className="custom-menubar">
         <Menu.Item header>{title || "PDF Editor"}</Menu.Item>
         <Menu.Menu position="right">
             {isPdfLoaded && (
