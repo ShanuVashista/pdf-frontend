@@ -43,7 +43,7 @@ export function FileRenameDialog(props: FileRenameDialogInterface) {
   const RenameFile = async () => {
     try {
       setLoading(true);
-      await $crud.put("file/update-file", {
+      await $crud.put("file/rename-file", {
         fileId: fileId,
         docname: docname1st + "." + docname2nd,
       });
