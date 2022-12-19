@@ -1,5 +1,6 @@
 import {useCallback, useState} from 'react';
 import {save} from "../utils/pdf";
+import {$state} from "../router";
 
 export interface Pdf {
     name: string;
@@ -56,6 +57,7 @@ export const usePdf = () => {
             console.log(e);
         } finally {
             setIsSaving(false);
+            $state.reload()
         }
     };
 

@@ -94,7 +94,6 @@ export function FileViewer() {
         } finally {
             setFileSaved(true);
         }
-        // $state.reload()
     };
 
 
