@@ -72,7 +72,10 @@ export function SignUpPage() {
     };
 
     useEffect(() => {
-        if (status === 200) $state.go('login')
+        if (status === 200) {
+            $crud.notify({type: 'success', message: 'Registration Successfully '})
+            $state.go('login');
+        }
     }, [status]);
 
     return (
