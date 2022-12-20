@@ -10,23 +10,25 @@ interface Props {
     updateDrawingAttachment: (drawingObject: Partial<DrawingAttachment>) => void;
 }
 
-export const Drawing = ({
-                            x,
-                            y,
-                            width,
-                            height,
-                            stroke,
-                            strokeWidth,
-                            path,
-                            pageWidth,
-                            pageHeight,
-                            removeDrawing,
-                            updateDrawingAttachment,
-                        }: DrawingAttachment & Props) => {
+export const Drawing = (
+    {
+        x,
+        y,
+        width,
+        height,
+        stroke,
+        strokeWidth,
+        path,
+        pageWidth,
+        pageHeight,
+        removeDrawing,
+        updateDrawingAttachment,
+    }: DrawingAttachment & Props) => {
     const svgRef = createRef<SVGSVGElement>();
     const [mouseDown, setMouseDown] = useState(false);
     const [positionTop, setPositionTop] = useState(y);
     const [positionLeft, setPositionLeft] = useState(x);
+    const [scale, setScale] = useState(1);
     const [canvasWidth, setCanvasWidth] = useState(width);
     const [direction, setDirection] = useState<string[]>([]);
     const [canvasHeight, setCanvasHeight] = useState(height);
@@ -141,9 +143,24 @@ export const Drawing = ({
         cancelDelete();
         removeDrawing();
     };
+
+    useEffect(() => {
+        const IMAGE_MAX_SIZE = 300;
+        let s = 1;
+        if (canvasWidth > IMAGE_MAX_SIZE) {
+            s = IMAGE_MAX_SIZE / canvasWidth;
+        }
+
+        if (canvasHeight > IMAGE_MAX_SIZE) {
+            s = Math.min(s, IMAGE_MAX_SIZE / canvasHeight);
+        }
+        console.log(s);
+    }, [canvasHeight, canvasWidth]);
+
     return (
         <DrawingComponent
             stroke={stroke}
+            scale={scale}
             strokeWidth={strokeWidth}
             path={path}
             width={canvasWidth}

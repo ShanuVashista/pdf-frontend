@@ -19,6 +19,7 @@ interface Props {
     cancelDelete: () => void;
     deleteDrawing: () => void;
     onClick: () => void;
+    scale: number;
     svgRef: RefObject<SVGSVGElement>;
     handleMouseDown: DragEventListener<HTMLDivElement>;
     handleMouseUp: DragEventListener<HTMLDivElement>;
@@ -39,6 +40,7 @@ export const Drawing: React.FC<Props> = (
         svgRef,
         path,
         stroke,
+        scale,
         strokeWidth,
         handleMouseDown,
         handleMouseMove,
@@ -91,6 +93,7 @@ export const Drawing: React.FC<Props> = (
                             stroke={stroke}
                             fill="none"
                             d={path}
+                            scale={scale}
                         />
                     </svg>
                     <Dimmer active={dimmerActive} onClickOutside={cancelDelete}>
